@@ -5,3 +5,28 @@
  * 1.3 基于 axios 调用验证码登录接口
  * 1.4 使用 Bootstrap 的 Alert 警告框反馈结果给用户
  */
+document.querySelector(".btn-primary").addEventListener("click", () => {
+  const form = document.querySelector(".login-form");
+  const data = serialize(form, { hush: true, empty: true });
+  // console.log(data);
+  axios({
+    method: "post",
+    url: "/v1_0/authorizations",
+    data: {
+      mobile: data.mobile,
+      code: data.code,
+    },
+  })
+    .then(function (res) {
+      console.log(res);
+      myAlert(true, "登录成功");
+      localStorage.setItem("token", res.data.data.token);
+      setTimeout(() => {
+        location.href = "../content/index.html";
+      }, 1500);
+    })
+    .catch(function (err) {
+      console.log(err.response);
+      myAlert(false, err.response.data.message);
+    });
+});
