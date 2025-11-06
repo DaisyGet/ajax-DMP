@@ -20,7 +20,7 @@ document.querySelector(".btn-primary").addEventListener("click", () => {
     .then(function (res) {
       console.log(res);
       myAlert(true, "登录成功");
-      localStorage.setItem("token", res.data.data.token);
+      localStorage.setItem("token", res.token);
       setTimeout(() => {
         location.href = "../content/index.html";
       }, 1500);

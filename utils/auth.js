@@ -19,7 +19,7 @@ axios({
   method: "get",
   url: "/v1_0/user/profile",
 }).then((res) => {
-  document.querySelector(".nick-name").innerHTML = res.data.data.name;
+  document.querySelector(".nick-name").innerHTML = res.name;
 });
 /**
  * 目标3：退出登录
