@@ -8,9 +8,10 @@ const editorConfig = {
   //当内容发生变化，获取对应的html元素，可以form表单提交
   onChange(editor) {
     const html = editor.getHtml();
-    console.log("editor content", html);
+    // console.log("editor content", html);
     // 也可以同步到 <textarea>
     document.querySelector(".publish-content").innerHTML = html;
+    // document.querySelector(".publish-content").style.display = "none";
   },
 };
 

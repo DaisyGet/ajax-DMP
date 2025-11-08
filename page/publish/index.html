@@ -68,6 +68,7 @@
                     id="title"
                     name="title"
                   />
+                  <!-- value="daisy" -->
                 </div>
                 <div>
                   <label for="channel_id" class="form-label">频道：</label>
@@ -98,7 +99,11 @@
                     <div id="editor-container"><!-- 编辑器 --></div>
                   </div>
                   <!-- 记录富文本内容-用于表单收集 -->
-                  <textarea name="content" class="publish-content"></textarea>
+                  <textarea
+                    name="content"
+                    class="publish-content"
+                    style="display: none"
+                  ></textarea>
                 </div>
                 <div>
                   <button type="button" class="btn btn-primary send">
