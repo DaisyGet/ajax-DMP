@@ -136,15 +136,25 @@ document.querySelector(".next").addEventListener("click", () => {
 document.querySelector(".art-list").addEventListener("click", async (e) => {
   if (e.target.classList.contains("del")) {
     const delid = e.target.parentNode.dataset.id;
-    const res = await axios({
-      url: `/v1_0/mp/articles/:${delid}`,
-      method: "DELETE",
-    });
-    if (query.page === pages && query.per_page === 1 && pages > 1) {
-      document.querySelector(".last").click();
+    try {
+      const res = await axios({
+        url: `/v1_0/mp/articles/${delid}`,
+        method: "DELETE",
+      });
+      if (
+        document.querySelector(".art-list").children.length === 1 &&
+        query.page !== 1
+      ) {
+        query.page--;
+      }
+      toggle();
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || "删除失败，请稍后重试";
+      console.log(errorMsg);
     }
-
-    toggle();
+  } else if (e.target.classList.contains("edit")) {
+    const editid = e.target.parentNode.dataset.id;
+    location.href = `../publish/index.html?id=${editid}`;
   }
 });
 

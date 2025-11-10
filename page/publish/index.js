@@ -66,6 +66,7 @@ document.querySelector(".img-file").addEventListener("change", (e) => {
  *  3.4 重置表单并跳转到列表页
  */
 document.querySelector(".send").addEventListener("click", () => {
+  if (document.querySelector(".send").innerHTML !== "发布") return;
   const form = document.querySelector(".art-form");
   let data = serialize(form, { hash: true, empty: true });
   delete data.id;
@@ -104,10 +105,71 @@ document.querySelector(".send").addEventListener("click", () => {
  *  4.3 修改标题和按钮文字
  *  4.4 获取文章详情数据并回显表单
  */
-
+(function () {
+  const url = location.search;
+  const param = new URLSearchParams(url);
+  // console.log(param);
+  param.forEach(async (value, key) => {
+    if (key === "id") {
+      const res = await axios({
+        url: `/v1_0/mp/articles/${value}`,
+        method: "GET",
+      });
+      const data = res;
+      // console.log(data);
+      document.querySelector(".title").innerHTML = `<span>编辑文章</span>`;
+      document.querySelector(".send").innerHTML = "修改";
+      Object.keys(data).forEach((key) => {
+        if (key === "cover") {
+          if (data[key].images[0]) {
+            // console.log("111");
+            document.querySelector(".rounded").src = data[key].images[0];
+            document.querySelector(".rounded").classList.add("show");
+            document.querySelector(".place").classList.add("hide");
+            document.querySelector(".rounded").addEventListener("click", () => {
+              document.querySelector(".img-file").click();
+            });
+          }
+        } else if (key === "channel_id") {
+          document.querySelector(".form-select").value = data[key];
+        } else if (key === "title") {
+          document.getElementById("title").value = data[key];
+        } else if (key === "id") {
+          document.querySelector(".art-form input").value = data[key];
+        } else if (key === "content") {
+          document.querySelector(".publish-content").innerHTML = data[key];
+          editor.setHtml(data[key]);
+        }
+      });
+    }
+  });
+})();
 /**
  * 目标5：编辑-保存文章
  *  5.1 判断按钮文字，区分业务（因为共用一套表单）
  *  5.2 调用编辑文章接口，保存信息到服务器
  *  5.3 基于 Alert 反馈结果消息给用户
  */
+document.querySelector(".send").addEventListener("click", async () => {
+  if (document.querySelector(".send").innerHTML !== "修改") return;
+  const form = document.querySelector(".art-form");
+  const data = serialize(form, { hash: true, empty: true });
+  // console.log(data);
+
+  try {
+    const res = await axios({
+      url: `/v1_0/mp/articles/${data.id}`,
+      method: "PUT",
+      data: {
+        ...data,
+        cover: {
+          type: document.querySelector(".rounded").src ? 1 : 0,
+          images: [document.querySelector(".rounded").src],
+        },
+      },
+    });
+    myAlert(true, "修改文章成功！");
+  } catch (err) {
+    myAlert(false, err.response.data.message);
+  }
+});
